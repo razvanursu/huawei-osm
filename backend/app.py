@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from auth import auth
+# from auth import auth
 
 # Add some boilerplate
 app = Flask(__name__)
