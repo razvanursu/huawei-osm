@@ -1,0 +1,59 @@
+
+mutation updateEvent($eventId: UUID!, $input: UpdateEventInput!) {
+  updateEvent(eventId: $eventId, input: $input) {
+    ...on Event {
+      id
+      paypalUsername
+    }
+  }
+}
+
+mutation createTicketTemplate($eventId: UUID!, $input: TicketTemplateInput!) {
+  createTicketTemplate(eventId: $eventId, input: $input ) {
+    ...on TicketTemplate {
+      id
+      name
+      description
+      price
+    }
+  }
+}
+
+mutation deleteTicketTemplate($eventId: UUID!, $ticketTemplateId: UUID!) {
+  deleteTicketTemplate(eventId: $eventId, ticketTemplateId: $ticketTemplateId ) {
+    ...on TicketTemplate {
+      id
+      name
+    }
+  }
+}
+
+mutation inviteUser($eventId: UUID!, $input: CreateEventParticipantInput!) {
+  createEventParticipant(eventId: $eventId, input: $input ) {
+    ...on EventParticipant {
+      id
+      participant {
+        name
+      }
+    }
+  }
+}
+
+mutation updateParticipant($eventId: UUID!, $input: UpdateEventParticipantInput!) {
+  updateEventParticipant(eventId: $eventId, input: $input ) {
+    ...on EventParticipant {
+      id
+      participant {
+        name
+      }
+    }
+  }
+}
+
+mutation removeParticipant($eventId: UUID!, $participantId: UUID!) {
+  deleteEventParticipant(eventId: $eventId, participantId: $participantId ) {
+    ...on EventParticipant {
+      id
+    }
+  }
+}

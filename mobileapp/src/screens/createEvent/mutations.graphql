@@ -1,0 +1,29 @@
+mutation createEvent($input: CreateEventInput!) {
+  createEvent(input: $input) {
+    ...on Event {
+      ...EventCreationResponse
+    }
+  }
+}
+
+fragment EventCreationResponse on Event {
+  id
+  name
+}
+
+mutation updateEvent($eventId: String!, $input: UpdateEventInput, $file: Upload) {
+  updateEvent(eventId: $eventId, input: $input, file: $file) {
+    ...on Event {
+      ...EventCreationResponse
+    }
+  }
+}
+
+fragment EventCreationResponse on Event {
+  id
+  name
+}
+
+mutation deleteEvent($eventId: String!) {
+  deleteEvent(eventId: $eventId)
+}
