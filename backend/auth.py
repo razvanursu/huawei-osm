@@ -124,6 +124,19 @@ def login():
     return jsonify({"username": username, "email": email, "token": token})
 
 
+@auth.route("/get-other-users")
+@tokenRequired
+def get_other_users(username):
+
+    other_users: User = User.query.filter(User.username != username).all()
+
+    response = jsonify([user.as_dict() for user in other_users])
+
+    return (
+        response,
+        200
+    )
+
 @auth.route("/protected", methods=["POST"])
 @tokenRequired
 def protected(username):
