@@ -105,7 +105,7 @@ def get_issues(username):
 
         issue_location = (issue_dict["latitude"], issue_dict["longitude"])
 
-        issue_dict["user_distance"] = geodesic(user_location, issue_location).meters
+        issue_dict["user_distance"] = round(geodesic(user_location, issue_location).meters)
 
     response = jsonify(issues_dict_list)
 
