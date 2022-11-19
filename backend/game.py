@@ -4,7 +4,7 @@ from geopy.distance import geodesic
 from . import db
 
 from .auth import tokenRequired
-from .models import User, Issues
+from .models import User, Issues, Guilds
 
 game = Blueprint('game', __name__)
 
@@ -19,7 +19,7 @@ def add_issue(username):
         latitude = req["latitude"],
         osm_way_id = req["osm_way_id"],
         category = req["category"],
-        owning_guild = "undefined",
+        owning_guild = 0,
     )
 
     db.session.add(new_issue)
@@ -30,27 +30,61 @@ def add_issue(username):
         200,
     )
 
+@game.route('/add-issue-bulk', methods=["POST"])
+@tokenRequired
+def add_issue_bulk(username):
+    req = request.get_json()
+
+    for issue_dict in req:
+        new_issue = Issues(
+            image_id = issue_dict["image_id"],
+            longitude = issue_dict["longitude"],
+            latitude = issue_dict["latitude"],
+            osm_way_id = issue_dict["osm_way_id"],
+            category = issue_dict["category"],
+        )
+
+        db.session.add(new_issue)
+        db.session.commit()
+
+    return (
+        jsonify({"message": f"Issue Bulk added"}),
+        200,
+    )
+
+
+
 @game.route('/get-issues')
 @tokenRequired
 def get_issues(username):
-    #req = request.get_json()
 
     issues_list = Issues.query.all()
 
-    response = jsonify([issue.as_dict() for issue in issues_list])
+    issues_dict_list = [issue.as_dict() for issue in issues_list]
+
+    for issue_dict in issues_dict_list:
+        if issue_dict["owning_guild"] != 0:
+            owning_guild = Guilds.query.get(issue_dict["owning_guild"])
+            issue_dict["owning_guild"] = owning_guild.as_dict()
+        
+        if issue_dict["solved_by"] != "undefined":
+            solved_by = User.query.filter(User.username == issue_dict["solved_by"]).first()
+            a = solved_by.as_dict()
+            issue_dict["solved_by"] = solved_by.as_dict()
+
+    response = jsonify(issues_dict_list)
 
     return (
         response,
         200,
     )
 
+
 @game.route('/solve-issue', methods=["POST"])
 @tokenRequired
 def solve_issue(username):
     req = request.get_json()
     
-    # req["current_latitude"]
-    # req["current_longitude"]
     
     issue_id = req["id"]
 
@@ -65,34 +99,52 @@ def solve_issue(username):
     if True or photo_okay:
         if user.guild:
             issue.owning_guild = user.guild
-
+            issue.solved_by = user.username
+        user.current_xp += 2000
 
     print(geodesic(current_position, issue_position).meters)
+
+    db.session.commit()
 
     return(
         jsonify({"message": f"Issue solved"}),
         200,
     )
 
-@game.route('/get-guilds', methods=["POST"])
+
+@game.route('/add-guild', methods=["POST"])
+@tokenRequired
+def add_guilds(username):
+
+    req = request.get_json()
+
+    new_guild = Guilds(
+        name=req["guild_name"],
+        color=req["guild_color"],
+        icon=req["guild_icon"]
+    )
+
+    db.session.add(new_guild)
+    db.session.commit()
+
+    return(
+        jsonify({"message": f"Added a guild"}),
+        200,
+    )
+
+
+@game.route('/get-guilds')
 @tokenRequired
 def get_guilds(username):
-    response = jsonify({
-        "avaialble_guilds":
-            [
-                "warrior",
-                "mage",
-                "orc",
-                "princess"
-            ]
-    })
+
+    guild_list = Guilds.query.all()
+
+    response = jsonify([guild.as_dict() for guild in guild_list])
 
     return(
         response,
         200,
     )
-
-
 
 
 @game.route('/choose-guild', methods=["POST"])
@@ -107,6 +159,6 @@ def choose_guild(username):
     db.session.commit()
 
     return(
-        jsonify({"message": f"User has chosen guild"}),
+        jsonify({"message": f"User has chosen a guild"}),
         200,
     )
