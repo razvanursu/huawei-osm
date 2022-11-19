@@ -8,16 +8,22 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { MapStackParamList } from "../../stacks/MapStack";
 import EventMarker from "../../components/Markers/EventMarker";
 import PlacesList from "../../components/Lists/PlacesList";
+import { useAuth } from "../../context/AuthContext";
+import { useIssues } from "../../services/mapService";
+import { Issue } from "../../models/map";
 
 export type EventListScreenProps = NativeStackScreenProps<MapStackParamList, 'MapSearch'>;
 
 const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
+    const { logout } = useAuth()
     const mapViewRef = React.useRef<MapView>(null);
     const [openMenu, setOpenMenu] = React.useState(false)
 
+    const { data: issues } = useIssues()
+
     const [region, setRegion] = React.useState({
-        latitude: 41.90263015510641,
-        longitude:  12.495989855378866,
+        latitude: 48.111356,
+        longitude: 11.614302,
         latitudeDelta: 0.0122,
         longitudeDelta: 0.0121,
     })
@@ -31,6 +37,7 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                 onRegionChange={(region) => setRegion(region)}
                 mapType={MAP_TYPES.NONE}
             >
+                
                 <UrlTile
                    urlTemplate="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
                    maximumZ={100}
@@ -43,11 +50,14 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                     strokeColor={"red"}
                     
                 />
-                <Marker
-                    coordinate={{ latitude: 41.902177, longitude: 12.498836}}
-                    title={"aaa"}
-                    description={"test"}
-                />
+                {issues && issues.map((issue: Issue) => (
+                    <Marker
+                        key={issue.id}
+                        coordinate={{ latitude: parseFloat(issue.latitude), longitude: parseFloat(issue.longitude)}}
+                        title={"aaa"}
+                        description={"test"}
+                    />
+                ))}
             </MapView>
 
             {/* Topbar - Search results */}
@@ -55,7 +65,7 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                 <View style={{ display: "flex", flex: 1 }} />
 
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: 10 }}>
-                    <Icon name="add-circle" size={50} />
+                    <Icon name="add-circle" size={50} onPress={logout} />
                     <View>
                         {openMenu && (
                             <>

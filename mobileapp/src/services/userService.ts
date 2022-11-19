@@ -4,7 +4,6 @@ import { instanceToPlain, plainToClass, plainToInstance } from "class-transforme
 import { AppRegistry } from "react-native"
 import Config from "../../config"
 import { Follower, Profile, User } from "../models/user"
-import { fetchWithAuth } from "../utils/utils"
 import api from "./api"
 
 export const UserServiceKeys = {

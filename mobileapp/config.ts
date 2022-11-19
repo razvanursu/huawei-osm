@@ -16,5 +16,5 @@ export default class Config {
     setRefreshToken = async (token: string) => await save("refreshToken", token)
     deleteRefreshToken = async () => await deleteValueFor("refreshToken")
 
-    getBackendAddress = () => "http://10.0.2.2:8000"
+    getBackendAddress = () => "http://10.0.2.2:5000"
 }

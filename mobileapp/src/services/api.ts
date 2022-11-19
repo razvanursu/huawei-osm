@@ -14,12 +14,11 @@ instance.interceptors.request.use(
       const token = await Config.getConfig().getAuthToken();
       if (token) {
         config.headers = config.headers || {}
-        config.headers["Authorization"] = 'JWT ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjYwMDEyNDIsIm9yaWdJYXQiOjE2NjYwMDA5NDIsImVtYWlsIjoicGlwcG9AZ21haWwuY29tIn0.oZ7dALVbdodgEPcRq3OHgFjIjb5_fpFKvfQTiwHrrPo"; //token;
+        config.headers["Authorization"] = "Bearer " + token;
       }
       return config;
     },
     (error) => {
-      console.log("err")
       return Promise.reject(error);
     }
   );
@@ -30,9 +29,10 @@ instance.interceptors.response.use(
       return res;
     },
     async (err) => {
+      console.log(err.config.url)
       const originalConfig = err.config;
   
-      if (originalConfig.url !== "/api/token/" && err.response) {
+      /*if (originalConfig.url !== "/api/token/" && err.response) {
         // Access Token was expired
         if (err.response.status === 401 && !originalConfig._retry) {
           originalConfig._retry = true;
@@ -50,7 +50,7 @@ instance.interceptors.response.use(
             return Promise.reject(_error);
           }
         }
-      }
+      }*/
   
       return Promise.reject(err);
     }

@@ -3,7 +3,7 @@ import Config from "../../config";
 import { dateToString } from "../utils/utils"
 
 interface LoginParameters {
-    email: string;
+    username: string;
     password: string;
 }
 
@@ -15,11 +15,11 @@ export interface RegisterParameters {
     password: string
 }
 
-export const login = ({email, password}: LoginParameters) => {
+export const login = ({username, password}: LoginParameters) => {
     const baseAddress = Config.getConfig().getBackendAddress()
-
-    return axios.post(`${baseAddress}/api/token/`, {
-        email,
+    console.log(username, password)
+    return axios.post(`${baseAddress}/login`, {
+        username,
         password
     })
     .then((response) => {

@@ -5,6 +5,7 @@ import jwt
 import os
 
 from flask import Blueprint, jsonify, request
+from flask_cors import CORS, cross_origin
 from . import db
 
 from .models import User
@@ -95,6 +96,7 @@ def tokenRequired(f):
 
 # add session token to check if someone is logged in
 @auth.route("/login", methods=["POST"])
+@cross_origin()
 def login():
     """Creates a user"""
     req = request.get_json()

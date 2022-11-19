@@ -20,10 +20,11 @@ import { RestLink } from 'apollo-link-rest';
 import { createUploadLink } from 'apollo-upload-client';
 import StoriesStack from './src/stacks/StoriesStack';
 import MapStack from './src/stacks/MapStack';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function AuthApp() {
   const {isLoading, isLoggedIn} = useAuth();
-
+  
   return (
     <NavigationContainer>
       {isLoading ? <SplashScreen /> :
@@ -36,91 +37,12 @@ function AuthApp() {
 }
 
 const QueryClientProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const httpLink = createHttpLink({
-    uri: Config.getConfig().getBackendAddress() + "/graphql",
-  });
-
-  const uploadLink = createUploadLink({
-    uri: Config.getConfig().getBackendAddress() + "/graphql",
-    credentials: "include"
-  })
-  
-  const authLink = setContext(async (_, { headers }) => {
-    // get the authentication token from local storage if it exists
-    const token = await Config.getConfig().getAuthToken()
-    // return the headers to the context so httpLink can read them
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : "",
-      }
-    }
-  });
-
-  const restLink = new RestLink({ uri: Config.getConfig().getBackendAddress() });
-
-  const errorLink = onError(
-    ({ graphQLErrors, networkError, operation, forward }) => {
-        console.log(graphQLErrors, networkError, operation)
-        for (let err of [...(graphQLErrors || []), ...(networkError?[networkError]:[])]) {
-          switch (err.message) {
-            case 'Response not successful: Received status code 403':
-            case 'Signature has expired':
-              // ignore 401 error for a refresh request
-              if (operation.operationName === 'refreshToken') return;
-  
-              const observable = new Observable<FetchResult<Record<string, any>>>(
-                (observer) => {
-                  // used an annonymous function for using an async function
-                  (async () => {
-                    try {
-                      const accessToken = await refreshToken();
-  
-                      if (!accessToken) {
-                        await Config.getConfig().deleteAuthToken()
-                        throw new GraphQLError('Empty RefreshToken');
-                      }
-
-                      await Config.getConfig().setAuthToken(accessToken)
-  
-                      // Retry the failed request
-                      const subscriber = {
-                        next: observer.next.bind(observer),
-                        error: observer.error.bind(observer),
-                        complete: observer.complete.bind(observer),
-                      };
-  
-                      forward(operation).subscribe(subscriber);
-                    } catch (err) {
-                      observer.error(err);
-                    }
-                  })();
-                }
-              );
-  
-              return observable;
-          }
-        }
-      if (networkError) {
-        console.log(`[Network error]: ${networkError.message}`);
-      }
-    }
-  );
-
-  const client = new ApolloClient({
-    link: ApolloLink.from([errorLink, authLink, restLink, uploadLink]),
-    cache: new InMemoryCache(),
-    defaultOptions: {
-      watchQuery: {
-        fetchPolicy: 'cache-and-network'
-      }
-    }
-  });
+  const queryClient = new QueryClient()
 
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       {children}
-    </ApolloProvider>
+    </QueryClientProvider>
   )
 }
 

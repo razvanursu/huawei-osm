@@ -33,7 +33,7 @@ def add_issue(username):
 @game.route('/get-issues')
 @tokenRequired
 def get_issues(username):
-    req = request.get_json()
+    #req = request.get_json()
 
     issues_list = Issues.query.all()
 
