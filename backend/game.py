@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import and_
 from geopy.distance import geodesic
+import random
+
 from . import db
 
 from .auth import tokenRequired
@@ -76,6 +78,9 @@ def get_issues(username):
             issue_dict["solved_by"] = solved_by.as_dict()
         else:
             del issue_dict["solved_by"]
+        
+        issue_dict["xp_value"] = get_xp_value(issue_dict["id"])
+        issue_dict["points_value"] = get_points_value(issue_dict["id"])
 
     response = jsonify(issues_dict_list)
 
@@ -105,7 +110,7 @@ def solve_issue(username):
         if user.guild:
             issue.owning_guild = user.guild
             issue.solved_by = user.username
-        user.current_xp += 2000
+        user.current_xp += get_xp_value(issue_id)
 
     print(geodesic(current_position, issue_position).meters)
 
@@ -166,4 +171,17 @@ def choose_guild(username):
     return(
         jsonify({"message": f"User has chosen a guild"}),
         200,
+    )
+
+
+def get_xp_value(id):
+    random.seed(id)
+    return random.choice(
+        [1000, 3000, 5000]
+    )
+
+def get_points_value(id):
+    random.seed(id)
+    return random.choice(
+        [120, 330, 560]
     )
