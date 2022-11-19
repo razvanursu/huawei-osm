@@ -10,6 +10,8 @@ class User(db.Model):
     join_date = db.Column(db.DateTime())
     guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     current_xp = db.Column(db.Integer, default=0)
+    current_points = db.Column(db.Integer, default=0)
+    level_xp = db.Column(db.Integer, default=0)
 
     def as_dict(self):
        return {

@@ -9,13 +9,27 @@ from .models import User, FollowList
 
 profile = Blueprint('profile', __name__)
 
+XP_STAIRS = [
+    1200,
+    2400,
+    3600,
+    4800,
+    5600,
+    6400,
+    7200,
+    10000
+]
+
 @profile.route('/profile')
 @tokenRequired
 def get_profile(username):
 
     user: User = User.query.filter(User.username == username).first()
 
-    return jsonify(user.as_dict())
+    response = user.as_dict()
+    response["level_max_xp"] = XP_STAIRS[user.current_level]
+
+    return jsonify(response)
 
 @profile.route('/follow', methods=["POST"])
 @tokenRequired

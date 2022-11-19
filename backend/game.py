@@ -13,6 +13,18 @@ from .models import User, Issues, Guilds
 
 game = Blueprint('game', __name__)
 
+XP_STAIRS = [
+    1200,
+    2400,
+    3600,
+    4800,
+    5600,
+    6400,
+    7200,
+    10000
+]
+
+
 @game.route('/add-issue', methods=["POST"])
 @tokenRequired
 def add_issue(username):
@@ -104,8 +116,8 @@ def solve_issue(username):
     issue: Issues = Issues.query.get(issue_id)
     user: User = User.query.filter(User.username == username).first()
 
-    current_position = (req["current_latitude"], req["current_longitude"])
-    issue_position = (issue.latitude, issue.longitude)
+    # current_position = (req["current_latitude"], req["current_longitude"])
+    # issue_position = (issue.latitude, issue.longitude)
 
     # TODO Check if the photo is okay
     photo_okay = True
@@ -114,8 +126,9 @@ def solve_issue(username):
             issue.owning_guild = user.guild
             issue.solved_by = user.username
         user.current_xp += get_xp_value(issue_id)
+        user.current_level, user.level_xp = get_level_from_xp(user.current_xp, XP_STAIRS)
 
-    print(geodesic(current_position, issue_position).meters)
+    # print(geodesic(current_position, issue_position).meters)
 
     db.session.commit()
 
@@ -188,6 +201,19 @@ def get_points_value(id):
     return random.choice(
         [120, 330, 560]
     )
+
+
+def get_level_from_xp(current_xp, xp_stairs):
+
+    for i, xp_stair in enumerate(xp_stairs):
+        current_xp -= xp_stair
+        if current_xp <= 0:
+            current_level = i
+            break
+    print(current_level)
+    level_xp = current_xp + xp_stairs[current_level]
+
+    return (current_level, level_xp)
 
 
 def get_nearest_neighbour_id(reference_issue: Issues, issues_list: List[Issues]) -> int:
