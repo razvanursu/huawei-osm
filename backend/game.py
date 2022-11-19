@@ -75,6 +75,10 @@ def add_issue_bulk(username):
 @tokenRequired
 def get_issues(username):
 
+    req = request.get_json()
+
+    user_location = (req["latitude"], req["longitude"])
+
     issues_list = Issues.query.all()
 
     issues_dict_list = [issue.as_dict() for issue in issues_list]
@@ -97,6 +101,11 @@ def get_issues(username):
         issue_dict["xp_value"] = get_xp_value(issue_dict["id"])
         issue_dict["points_value"] = get_points_value(issue_dict["id"])
         issue_dict["nearest_neighbor"], issue_dict["circle_radius"] = get_nearest_neighbour_id(issue_dict, issues_dict_list)
+
+
+        issue_location = (issue_dict["latitude"], issue_dict["longitude"])
+
+        issue_dict["user_distance"] = geodesic(user_location, issue_location).meters
 
     response = jsonify(issues_dict_list)
 

@@ -9,3 +9,5 @@ local_images
 
 env.sh
 migrations/
+
+ml_models/

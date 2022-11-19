@@ -4,3 +4,9 @@ PyJWT
 Flask-SQLAlchemy
 flask_migrate
 geopy
+
+# Machine Learning
+Pillow
+torch
+torchvision
+torchaudio
