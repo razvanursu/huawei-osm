@@ -24,8 +24,6 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
 
     const { data: issues } = useIssues()
 
-    console.log(issues)
-
     const [region, setRegion] = React.useState({
         latitude: 48.111356,
         longitude: 11.614302,
@@ -62,7 +60,11 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                         title={"aaa"}
                         description={"test"}
                         onPress={() => setOpenIssue(issue)}
-                    />
+                    >
+                        <View style={{ borderRadius: 25 }}>
+                            <Avatar source={require('../../../assets/icons/issue.png')} size={50} rounded/>
+                        </View>
+                    </Marker>
                 ))}
             </MapView>
 

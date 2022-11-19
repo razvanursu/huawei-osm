@@ -14,7 +14,9 @@ const IssueOverlay: React.FC<IssueOverlayProps> = ({
     visible,
     onClose
 }) => {
-    const address = React.useMemo(async () => {
+    const [address, setAddress] = React.useState("")
+
+    React.useMemo(async () => {
         try{
             const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${issue.latitude}&lon=${issue.longitude}&format=json`, {
                 headers: {
@@ -22,27 +24,23 @@ const IssueOverlay: React.FC<IssueOverlayProps> = ({
                 }
             })
             const json = await res.json()
-            console.log(json)
             console.log(json.display_name)
-            console.log(json.address)
-            return json.address
+            setAddress(json.display_name)
         }
         catch(e) {
-            console.log("here", e)
+            console.log(e)
         }
     }, [issue.latitude, issue.longitude])
-
-    console.log(address)
 
     return (
         <Overlay
             isVisible={visible}
             onBackdropPress={onClose}
             animationType="slide"
-            fullScreen
             overlayStyle={{
                 position: "absolute",
                 left: 0,
+                top: 100,
                 bottom: 0,
                 width: "100%",
             }}
@@ -60,12 +58,24 @@ const IssueOverlay: React.FC<IssueOverlayProps> = ({
                 <Avatar
                     size={100}
                     rounded
-                    source={{ uri: "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg" }}
+                    source={require('../../../assets/icons/issue.png')}
                 />
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <Text>
+                    {address || "loading"}
+                </Text>
+            </View>
+
+            <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
+                <Avatar
+                    size={80}
+                    source={require('../../../assets/icons/win.png')}
+                    containerStyle={{ marginRight: 30 }}
+                />
                 <Text h3>
-                    
+                    3000 pts
                 </Text>
             </View>
                 
