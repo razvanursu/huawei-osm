@@ -32,6 +32,8 @@ const IssueOverlay: React.FC<IssueOverlayProps> = ({
         }
     }, [issue.latitude, issue.longitude])
 
+    console.log(issue)
+
     return (
         <Overlay
             isVisible={visible}

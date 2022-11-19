@@ -4,7 +4,6 @@ import { instanceToPlain, plainToClass, plainToInstance } from "class-transforme
 import { AppRegistry } from "react-native"
 import Config from "../../config"
 import { Issue } from "../models/map"
-import { Follower, Profile, User } from "../models/user"
 import api from "./api"
 
 export const MapServiceKeys = {
@@ -18,7 +17,9 @@ export const retrieveIssues = () => {
     const baseAddress = Config.getConfig().getBackendAddress()
 
     return api.get(`${baseAddress}/get-issues`)
-        .then((response: AxiosResponse<Issue>) => plainToInstance(Issue, response.data))
+        .then((response: AxiosResponse<Issue[]>) => {
+            return plainToInstance(Issue, response.data)
+        })
 }
 
 export const useIssues = () => 
