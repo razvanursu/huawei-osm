@@ -15,7 +15,6 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, Observable
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLError } from 'graphql';
-import { refreshToken } from './src/utils/utils';
 import { RestLink } from 'apollo-link-rest';
 import { createUploadLink } from 'apollo-upload-client';
 import StoriesStack from './src/stacks/StoriesStack';
@@ -24,7 +23,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function AuthApp() {
   const {isLoading, isLoggedIn} = useAuth();
-  
+
   return (
     <NavigationContainer>
       {isLoading ? <SplashScreen /> :

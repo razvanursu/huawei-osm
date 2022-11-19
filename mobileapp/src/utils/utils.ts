@@ -4,26 +4,6 @@ import Config from "../../config";
 import api from "../services/api";
 import { ReactNativeFile } from 'apollo-upload-client';
 
-export async function refreshToken() {
-  const refreshToken = await Config.getConfig().getRefreshToken()
-  if(!refreshToken) return
-
-  const result = await fetch(Config.getConfig().getBackendAddress() + "/graphql", {
-    method: "POST",
-    body: JSON.stringify({
-      query: `mutation refreshToken($refreshToken: String!) {
-        refreshToken(refreshToken: $refreshToken) {
-          token
-        }
-      }`,
-      variables: {
-        refreshToken: refreshToken,
-      },
-    })
-  })
-  const json = await result.json()
-  return json.data.refreshToken.token
-}
 
 export function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
@@ -41,7 +21,6 @@ export function fetcher<TData, TVariables>(query: string, variables?: TVariables
 
       if(message === "Signature has expired"){
         await Config.getConfig().deleteAuthToken()
-        const refreshToken = await Config.getConfig().getRefreshToken()
         //const token = await fetcher<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, { refreshToken: refreshToken || "" })()
         //console.log(token.refreshToken.token)
       }

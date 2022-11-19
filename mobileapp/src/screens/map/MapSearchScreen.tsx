@@ -11,15 +11,20 @@ import PlacesList from "../../components/Lists/PlacesList";
 import { useAuth } from "../../context/AuthContext";
 import { useIssues } from "../../services/mapService";
 import { Issue } from "../../models/map";
+import IssueOverlay from "./IssueOverlay";
 
 export type EventListScreenProps = NativeStackScreenProps<MapStackParamList, 'MapSearch'>;
 
 const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
     const { logout } = useAuth()
     const mapViewRef = React.useRef<MapView>(null);
+
     const [openMenu, setOpenMenu] = React.useState(false)
+    const [openIssue, setOpenIssue] = React.useState<Issue>();
 
     const { data: issues } = useIssues()
+
+    console.log(issues)
 
     const [region, setRegion] = React.useState({
         latitude: 48.111356,
@@ -53,9 +58,10 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                 {issues && issues.map((issue: Issue) => (
                     <Marker
                         key={issue.id}
-                        coordinate={{ latitude: parseFloat(issue.latitude), longitude: parseFloat(issue.longitude)}}
+                        coordinate={{ latitude: issue.latitude, longitude: issue.longitude}}
                         title={"aaa"}
                         description={"test"}
+                        onPress={() => setOpenIssue(issue)}
                     />
                 ))}
             </MapView>
@@ -77,6 +83,14 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                     </View>
                 </View>
             </View>
+
+            {openIssue && (
+                <IssueOverlay
+                    issue={openIssue}
+                    visible={Boolean(openIssue)}
+                    onClose={() => setOpenIssue(undefined)}
+                />
+            )}
         </View>
     )
 }

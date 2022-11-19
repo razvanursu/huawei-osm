@@ -1,4 +1,4 @@
-import { Expose, classToPlain } from 'class-transformer';
+import { Expose, classToPlain, Type, Transform } from 'class-transformer';
 import { Base } from './base';
 
 export class Issue extends Base {
@@ -6,8 +6,10 @@ export class Issue extends Base {
   imageId: string
 
   @Expose({ name: "latitude" })
-  latitude: string
+  @Transform(({ value }) => parseFloat(value))
+  latitude: number
 
   @Expose({ name: "longitude" })
-  longitude: string
+  @Transform(({ value }) => parseFloat(value))
+  longitude: number
 }

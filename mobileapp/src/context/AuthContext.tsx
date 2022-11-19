@@ -21,13 +21,12 @@ const AuthProvider = ({children}: any) => {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let token, refreshToken;
+      let token;
 
       var username;
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
         token = await Config.getConfig().getAuthToken()
-        refreshToken = await Config.getConfig().getRefreshToken()
     
         if(token) {
           var decodedToken = jwt_decode(token) as Record<string, string>
@@ -36,7 +35,7 @@ const AuthProvider = ({children}: any) => {
 
       } catch (e) {
         // Restoring token failed
-        console.log("HERE", e)
+        console.log(e)
       }
 
 
@@ -57,7 +56,6 @@ const AuthProvider = ({children}: any) => {
 
   const logout = async () => {
     Config.getConfig().deleteAuthToken()
-    Config.getConfig().deleteRefreshToken()
     setIsLoading(false)
     setIsLoggedIn(false)
   };

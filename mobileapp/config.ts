@@ -12,9 +12,5 @@ export default class Config {
     setAuthToken = async (token: string) => await save("token", token)
     deleteAuthToken = async () => await deleteValueFor("token")
 
-    getRefreshToken = async () => await getValueFor("refreshToken")
-    setRefreshToken = async (token: string) => await save("refreshToken", token)
-    deleteRefreshToken = async () => await deleteValueFor("refreshToken")
-
     getBackendAddress = () => "http://10.0.2.2:5000"
 }
