@@ -100,6 +100,7 @@ def solve_issue(username):
         if user.guild:
             issue.owning_guild = user.guild
             issue.solved_by = user.username
+        user.current_xp += 2000
 
     print(geodesic(current_position, issue_position).meters)
 
