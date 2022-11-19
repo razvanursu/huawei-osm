@@ -40,6 +40,7 @@ def add_issue(username):
         category = req["category"],
         owning_guild = 0,
     )
+    new_issue.ml_category = predict(new_issue.image_id)
 
     db.session.add(new_issue)
     db.session.commit()
@@ -63,6 +64,8 @@ def add_issue_bulk(username):
             category = issue_dict["category"],
         )
 
+        new_issue.ml_category = predict(new_issue.image_id)
+
         db.session.add(new_issue)
         db.session.commit()
 
@@ -77,7 +80,7 @@ def add_issue_bulk(username):
 @tokenRequired
 def get_issues(username):
 
-    req = request.get_json()
+    req = request.args
 
     user_location = (req["latitude"], req["longitude"])
 
@@ -135,7 +138,7 @@ def solve_issue(username):
     # current_position = (req["current_latitude"], req["current_longitude"])
     # issue_position = (issue.latitude, issue.longitude)
 
-    predicted_class = predict(issue.image_id)
+    # predicted_class = predict(issue.image_id)
 
     # TODO Check if the photo is okay
     photo_okay = True

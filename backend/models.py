@@ -42,7 +42,7 @@ class Issues(db.Model):
     owning_guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     solved_by = db.Column(db.String(100), default="undefined")
     solved_datetime = db.Column(db.DateTime(), default=dt.datetime.fromtimestamp(0))
-
+    ml_category = db.Column(db.String(100))
 
     def as_dict(self):
        return {
