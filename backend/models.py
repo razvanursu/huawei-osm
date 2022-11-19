@@ -38,6 +38,7 @@ class Issues(db.Model):
     owning_guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     solved_by = db.Column(db.String(100), default="undefined")
 
+
     def as_dict(self):
        return {
         c.name: getattr(self, c.name) for c in self.__table__.columns}
