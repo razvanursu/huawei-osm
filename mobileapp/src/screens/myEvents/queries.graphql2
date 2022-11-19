@@ -1,0 +1,21 @@
+"""
+query myInvites {
+  myEvents(filters: { isInvitationPending: true }) {
+    ...EventParticipantListEntry
+  }
+}
+
+query myEvents {
+  myEvents(filters: { isInvitationPending: false }) {
+    ...EventParticipantListEntry
+  }
+}
+
+fragment EventParticipantListEntry on EventParticipant {
+  event {
+    ...EventListEntry
+  }
+  isAdmin
+  title
+}
+"""

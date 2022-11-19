@@ -1,0 +1,21 @@
+mutation updateProfile($profile: ProfileUpdateInput!, $file: Upload) {
+    updateProfile(input: $profile, file: $file) {
+        ... on Profile {
+            name
+        }
+    }
+}
+
+mutation followUser($userId: String!) {
+    followUser(input: { followingId: $userId }) {
+        ... on FollowerRelation {
+            followingUser {
+                id
+            }
+        }
+    }
+}
+
+mutation unfollowUser($userId: String!) {
+    unfollowUser(input: { followingId: $userId })
+}

@@ -1,0 +1,14 @@
+query eventStories($eventId: String!) {
+    eventStories(eventId: $eventId) {
+        ... on EventStory {
+            ...EventStoryEntry
+        }
+    }
+}
+
+fragment EventStoryEntry on EventStory {
+    author {
+        ...ProfileListEntry
+    }
+    url
+}

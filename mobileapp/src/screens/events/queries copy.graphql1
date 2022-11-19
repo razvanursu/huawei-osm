@@ -1,0 +1,132 @@
+"""
+query events {
+  events {
+    ...EventListEntry
+  }
+}
+
+fragment EventListEntry on Event {
+    id
+    hashtag
+    name
+    description
+    startTime
+    endTime
+    poster
+    address
+    isPrivate
+    organizer {
+        ...ProfileListEntry
+    }
+    participants {
+        id
+        name
+        profilePicture
+    }
+}
+
+query event($eventId: UUID!) {
+  event(eventId: $eventId) {
+    ...FullEvent
+  }
+}
+
+query eventTicketTemplates($eventId: UUID!) {
+  event(eventId: $eventId) {
+    ticketTemplates {
+      ...EventTicketTemplate
+    }
+  }
+}
+
+fragment EventTicketTemplate on TicketTemplate {
+  id
+  name
+  price
+  description
+}
+
+fragment FullEvent on Event {
+    id
+    hashtag
+    name
+    description
+    startTime
+    endTime
+    paypalUsername
+    poster
+    address
+    isPrivate
+    ticketTemplates {
+      ...EventTicketTemplate
+    }
+    organizer {
+        id
+        name
+        username
+        profilePicture
+    }
+    admins {
+        id
+        name
+        username
+        profilePicture
+    }
+    participants {
+        id
+        name
+        username
+        profilePicture
+    }
+    isAdmin
+    isOrganizer
+    participation {
+      ...Participation
+    }
+}
+
+fragment Participation on EventParticipant {
+      participant {
+        ...ProfileListEntry
+      }
+      isAdmin
+      title
+      isInvitationPending
+}
+
+query profilesList {
+  profiles {
+    ...ProfileListEntry
+  }
+}
+
+query pendingInvites($eventId: UUID!) {
+  eventParticipants(eventId: $eventId, filters: { isInvitationPending: true }) {
+    participant{
+      ...ProfileListEntry
+    }
+    isAdmin
+    title
+  }
+}
+
+query participants($eventId: UUID!) {
+  eventParticipants(eventId: $eventId, filters: { isInvitationPending: false }) {
+    participant{
+      ...ProfileListEntry
+    }
+    isAdmin
+    title
+  }
+}
+
+query allParticipants($eventId: UUID!) {
+  eventParticipants(eventId: $eventId) {
+    participant{
+      ...ProfileListEntry
+    }
+    isAdmin
+    title
+  }
+}
+"""
