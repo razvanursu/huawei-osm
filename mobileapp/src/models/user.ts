@@ -13,4 +13,13 @@ export class User extends Base {
 
   @Expose({ name: "current_xp" })
   currentXp: number
+
+  @Expose({ name: "current_points" })
+  currentPoints: number
+  
+  @Expose({ name: "level_xp" })
+  levelXp: number
+
+  @Expose({ name: "level_max_xp" })
+  levelMaxXp: number
 }

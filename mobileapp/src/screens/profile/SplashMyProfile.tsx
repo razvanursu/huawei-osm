@@ -5,26 +5,15 @@ import React from "react";
 import { LoadingAuthenticatedView } from "../../components/views";
 import { User } from "../../models/user";
 import { useMyProfile } from "../../services/userService";
-import { MyProfileStackParamList } from "../../stacks/MyProfileStack";
+import { MapStackParamList } from "../../stacks/MapStack";
 import ProfileScreen from "./ProfileScreen";
 
-type SplashMyProfileProps = NativeStackScreenProps<MyProfileStackParamList, 'MyProfile'>;
+type SplashMyProfileProps = NativeStackScreenProps<MapStackParamList, 'MyProfile'>;
 
 const SplashProfile: React.FC<SplashMyProfileProps> = (props) => {
     const { data: myProfile, loading: isProfileLoading } = useMyProfile()
 
-    React.useEffect(() => {
-        props.navigation.setOptions({
-          headerRight: () => (
-            <Icon name="settings" onPress={() => props.navigation.push("Settings")} />
-          ),
-        });
-
-    }, [props.navigation]);
-
-    const isLoading = isProfileLoading
-
-    if(isLoading) return <LoadingAuthenticatedView />
+    if(isProfileLoading) return <LoadingAuthenticatedView />
     //TODO consider error cases
     if(myProfile)
         //TODO add title

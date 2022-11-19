@@ -2,7 +2,6 @@ import axios from "axios"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from "../../config";
 import api from "../services/api";
-import { ReactNativeFile } from 'apollo-upload-client';
 
 
 export function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
@@ -47,17 +46,6 @@ export const deleteValueFor = async (key: string) => {
 //Format YYYY-MM-DD
 export const dateToString = (date: Date) => 
     date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
-
-export const generateRNFile = (uri: string, name: string) => {
-  const uriParts = uri.split('.');
-  const fileType = uriParts[uriParts.length - 1];
-  console.log(fileType)
-  return uri ? new ReactNativeFile({
-    uri,
-    type: `image/${fileType}`,
-    name,
-  }) : null;
-}
 
 //Necessary to avoid a caching bug
 export const generateImageUrl = (url: string) => `${url}?${new Date()}`

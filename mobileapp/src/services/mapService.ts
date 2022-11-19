@@ -22,3 +22,14 @@ export const retrieveIssues = () => {
 
 export const useIssues = () => 
     useQuery(MapServiceKeys.issues(), () => retrieveIssues())
+
+export const solveIssue = (issueId: number) => {
+    const baseAddress = Config.getConfig().getBackendAddress()
+    
+    return api.post(`${baseAddress}/solve-issue`, {
+        id: issueId
+    })
+    .then((response) => {
+        return response.data
+    })
+}

@@ -17,7 +17,7 @@ export interface RegisterParameters {
 
 export const login = ({username, password}: LoginParameters) => {
     const baseAddress = Config.getConfig().getBackendAddress()
-    console.log(username, password)
+    
     return axios.post(`${baseAddress}/login`, {
         username,
         password

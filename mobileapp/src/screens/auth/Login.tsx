@@ -1,13 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, Input, Text, useTheme } from "@rneui/themed";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import React from "react";
 import { View } from "react-native";
 import Config from "../../../config";
 import { AuthView } from "../../components/views";
 import { useAuth } from "../../context/AuthContext";
-import { useLoginMutation } from "../../generated/types";
 import { AuthStackParamList } from "../../navigation/authNavigation";
 import api from "../../services/api"
 import { login } from "../../services/authService";

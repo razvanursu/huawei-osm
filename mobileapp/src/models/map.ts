@@ -22,4 +22,17 @@ export class Issue extends Base {
   @Expose({ name: "solved_by" })
   @Transform(({ value }) => value && plainToInstance(User, value))
   solvedBy: User
+
+  @Expose({ name: "circle_radius" })
+  circleRadius: number
+
+  @Expose({ name: "nearest_neighbor" })
+  nearestNeighbor: number
+
+  @Expose({ name: "points_value" })
+  pointsValue: number
+
+  @Expose({ name: "xp_value" })
+  xpValue: number
+
 }
