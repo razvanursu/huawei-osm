@@ -48,7 +48,7 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
             >
                 
                 <UrlTile
-                   urlTemplate="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+                   urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                    maximumZ={100}
                    style={{ zIndex: -1 }}
                />
