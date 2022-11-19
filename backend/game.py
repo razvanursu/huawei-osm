@@ -1,7 +1,10 @@
+import random
+from typing import List
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import and_
+
 from geopy.distance import geodesic
-import random
 
 from . import db
 
@@ -81,6 +84,7 @@ def get_issues(username):
         
         issue_dict["xp_value"] = get_xp_value(issue_dict["id"])
         issue_dict["points_value"] = get_points_value(issue_dict["id"])
+        issue_dict["nearest_neighbor"], issue_dict["circle_radius"] = get_nearest_neighbour_id(issue_dict, issues_dict_list)
 
     response = jsonify(issues_dict_list)
 
@@ -94,7 +98,6 @@ def get_issues(username):
 @tokenRequired
 def solve_issue(username):
     req = request.get_json()
-    
     
     issue_id = req["id"]
 
@@ -185,3 +188,23 @@ def get_points_value(id):
     return random.choice(
         [120, 330, 560]
     )
+
+
+def get_nearest_neighbour_id(reference_issue: Issues, issues_list: List[Issues]) -> int:
+
+    reference_issue_position = (reference_issue["latitude"], reference_issue["longitude"])
+
+    best_distance = 1e10
+    nearest_neighbour_id = 0
+    
+    for current_issue in issues_list:
+        current_issue_position = (current_issue["latitude"], current_issue["longitude"])
+        if current_issue_position != reference_issue_position:
+
+            dist = geodesic(reference_issue_position, current_issue_position).meters
+
+            if dist < best_distance:
+                best_distance = dist
+                nearest_neighbour_id = current_issue["id"]
+    
+    return (nearest_neighbour_id, round(best_distance / 2))
