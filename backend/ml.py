@@ -84,25 +84,25 @@ class MyCNN(Module):
                 nn.init.constant_(m.bias, 0)
 
 
-# def predict(image_id):
-
-#     model = MyCNN(num_classes=2)
-#     model.load_state_dict(torch.load(MODEL_PATH))
-
-#     image_path = f"./issues_images/{image_id}.jpg"
-
-#     img = Image.open(image_path)
-
-#     transform = transforms.Compose([transforms.Resize((224,224)),
-#         transforms.ToTensor()
-#     ])
-
-#     my_input = transform(img).unsqueeze(0)
-
-#     if model.forward(my_input).argmax(1).item() == 0:
-#         return "footway"
-#     else:
-#         return "primary"
-
 def predict(image_id):
-    return "primary"
+
+    model = MyCNN(num_classes=2)
+    model.load_state_dict(torch.load(MODEL_PATH))
+
+    image_path = f"./issues_images/{image_id}.jpg"
+
+    img = Image.open(image_path)
+
+    transform = transforms.Compose([transforms.Resize((224,224)),
+        transforms.ToTensor()
+    ])
+
+    my_input = transform(img).unsqueeze(0)
+
+    if model.forward(my_input).argmax(1).item() == 0:
+        return "footway"
+    else:
+        return "primary"
+
+# def predict(image_id):
+#     return "primary"
