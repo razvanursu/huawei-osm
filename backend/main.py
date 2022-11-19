@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 from . import db
 
 from .auth import tokenRequired
@@ -9,11 +9,3 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     return 'Index'
-
-@main.route('/profile')
-@tokenRequired
-def profile(username):
-
-    U
-
-    return 'Profile'

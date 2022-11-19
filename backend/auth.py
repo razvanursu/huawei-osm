@@ -1,3 +1,4 @@
+import datetime as dt
 import functools
 import hashlib
 import jwt
@@ -34,11 +35,14 @@ def signup():
 
     # Create user based on hashed password
 
+    join_date = dt.datetime.now()
+
     new_user = User(
         username=username,
         password=password_hashed,
         email=email,
         current_level=0,
+        join_date=join_date
     )
 
     db.session.add(new_user)

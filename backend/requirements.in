@@ -3,3 +3,4 @@ flask_cors
 PyJWT
 Flask-SQLAlchemy
 flask_migrate
+geopy

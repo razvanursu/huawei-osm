@@ -22,6 +22,10 @@ flask-sqlalchemy==3.0.2
     # via
     #   -r requirements.in
     #   flask-migrate
+geographiclib==2.0
+    # via geopy
+geopy==2.3.0
+    # via -r requirements.in
 importlib-metadata==5.0.0
     # via flask
 itsdangerous==2.1.2
