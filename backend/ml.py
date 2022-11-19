@@ -10,6 +10,7 @@ from torchvision import datasets, models, transforms
 from torch.nn.modules.loss import BCEWithLogitsLoss
 from torch.optim import lr_scheduler
 
+from torch import nn
 from torch.nn import Conv2d, Linear, LogSoftmax, Module
 from torch.nn import MaxPool2d, Module, ReLU
 from torch import flatten
@@ -17,6 +18,7 @@ from torch import flatten
 from PIL import Image
 from torchvision import datasets, transforms
 
+MODEL_PATH = "./ml_models/my_new_non_TL_model_new_experimental.pth"
 
 
 class MyCNN(Module):
@@ -67,7 +69,40 @@ class MyCNN(Module):
         
         # return the output predictions
         return x
+    
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                nn.init.constant_(m.bias, 0)
 
 
-model = MyCNN(num_classes=2)
-model.load_state_dict(torch.load(model_path))
+# def predict(image_id):
+
+#     model = MyCNN(num_classes=2)
+#     model.load_state_dict(torch.load(MODEL_PATH))
+
+#     image_path = f"./issues_images/{image_id}.jpg"
+
+#     img = Image.open(image_path)
+
+#     transform = transforms.Compose([transforms.Resize((224,224)),
+#         transforms.ToTensor()
+#     ])
+
+#     my_input = transform(img).unsqueeze(0)
+
+#     if model.forward(my_input).argmax(1).item() == 0:
+#         return "footway"
+#     else:
+#         return "primary"
+
+def predict(image_id):
+    return "primary"
