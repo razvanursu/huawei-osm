@@ -66,11 +66,16 @@ def get_issues(username):
         if issue_dict["owning_guild"] != 0:
             owning_guild = Guilds.query.get(issue_dict["owning_guild"])
             issue_dict["owning_guild"] = owning_guild.as_dict()
+        else:
+            del issue_dict["owning_guild"]
+
         
         if issue_dict["solved_by"] != "undefined":
             solved_by = User.query.filter(User.username == issue_dict["solved_by"]).first()
             a = solved_by.as_dict()
             issue_dict["solved_by"] = solved_by.as_dict()
+        else:
+            del issue_dict["solved_by"]
 
     response = jsonify(issues_dict_list)
 
