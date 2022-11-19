@@ -19,7 +19,7 @@ def add_issue(username):
         latitude = req["latitude"],
         osm_way_id = req["osm_way_id"],
         category = req["category"],
-        owning_guild = "undefined",
+        owning_guild = 0,
     )
 
     db.session.add(new_issue)
@@ -30,17 +30,40 @@ def add_issue(username):
         200,
     )
 
+@game.route('/add-issue-bulk', methods=["POST"])
+@tokenRequired
+def add_issue_bulk(username):
+    req = request.get_json()
+
+    for issue_dict in req:
+        new_issue = Issues(
+            image_id = issue_dict["image_id"],
+            longitude = issue_dict["longitude"],
+            latitude = issue_dict["latitude"],
+            osm_way_id = issue_dict["osm_way_id"],
+            category = issue_dict["category"],
+        )
+
+        db.session.add(new_issue)
+        db.session.commit()
+
+    return (
+        jsonify({"message": f"Issue Bulk added"}),
+        200,
+    )
+
+
+
 @game.route('/get-issues')
 @tokenRequired
 def get_issues(username):
 
     issues_list = Issues.query.all()
 
-
     issues_dict_list = [issue.as_dict() for issue in issues_list]
 
     for issue_dict in issues_dict_list:
-        if issue_dict["owning_guild"] != "undefined":
+        if issue_dict["owning_guild"] != 0:
             owning_guild = Guilds.query.get(issue_dict["owning_guild"])
             issue_dict["owning_guild"] = owning_guild.as_dict()
         
@@ -49,7 +72,7 @@ def get_issues(username):
             a = solved_by.as_dict()
             issue_dict["solved_by"] = solved_by.as_dict()
 
-    response = jsonify(issue_dict)
+    response = jsonify(issues_dict_list)
 
     return (
         response,

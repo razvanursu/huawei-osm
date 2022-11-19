@@ -8,7 +8,7 @@ class User(db.Model):
     password = db.Column(db.String(100))
     current_level = db.Column(db.Integer)
     join_date = db.Column(db.DateTime())
-    guild = db.Column(db.String(100), default="undefined")
+    guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     current_xp = db.Column(db.Integer, default=0)
 
     def as_dict(self):
@@ -35,7 +35,7 @@ class Issues(db.Model):
     latitude = db.Column(db.Numeric(precision=8, scale=6))
     osm_way_id = db.Column(db.String(100))
     category = db.Column(db.String(100))
-    owning_guild = db.Column(db.String(100), ForeignKey("guilds.name"))
+    owning_guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     solved_by = db.Column(db.String(100), default="undefined")
 
     def as_dict(self):
@@ -43,7 +43,8 @@ class Issues(db.Model):
         c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Guilds(db.Model):
-    name = db.Column(db.String(100), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
     color = db.Column(db.String(10))
     icon = db.Column(db.String(1000))
 
