@@ -26,13 +26,11 @@ const CURRENT_POSITION = {
 export type EventListScreenProps = NativeStackScreenProps<MapStackParamList, 'MapSearch'>;
 
 const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
-    const { logout } = useAuth()
     const mapViewRef = React.useRef<MapView>(null);
 
-    const [openMenu, setOpenMenu] = React.useState(false)
     const [openIssue, setOpenIssue] = React.useState<Issue>();
 
-    const { data: issues } = useIssues()
+    const { data: issues } = useIssues({ latitude: CURRENT_POSITION.latitude, longitude: CURRENT_POSITION.longitude })
     const { data: myProfile } = useMyProfile()
 
     const [region, setRegion] = React.useState(CURRENT_POSITION)

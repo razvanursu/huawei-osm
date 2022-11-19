@@ -13,15 +13,15 @@ export const MapServiceKeys = {
     following: (userID: string) => ["following", userID],
 }
 
-export const retrieveIssues = () => {
+export const retrieveIssues = ({ latitude, longitude }: { latitude: number, longitude: number }) => {
     const baseAddress = Config.getConfig().getBackendAddress()
 
     return api.get(`${baseAddress}/get-issues`)
         .then((response: AxiosResponse<Issue[]>) => plainToInstance(Issue, response.data))
 }
 
-export const useIssues = () => 
-    useQuery(MapServiceKeys.issues(), () => retrieveIssues())
+export const useIssues = ({ latitude, longitude }: { latitude: number, longitude: number }) => 
+    useQuery(MapServiceKeys.issues(), () => retrieveIssues({ latitude, longitude }))
 
 export const solveIssue = (issueId: number) => {
     const baseAddress = Config.getConfig().getBackendAddress()
