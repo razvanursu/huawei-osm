@@ -16,7 +16,7 @@ export const MapServiceKeys = {
 export const retrieveIssues = ({ latitude, longitude }: { latitude: number, longitude: number }) => {
     const baseAddress = Config.getConfig().getBackendAddress()
 
-    return api.get(`${baseAddress}/get-issues`)
+    return api.get(`${baseAddress}/get-issues?latitude=${latitude}&longitude=${longitude}`, )
         .then((response: AxiosResponse<Issue[]>) => plainToInstance(Issue, response.data))
 }
 

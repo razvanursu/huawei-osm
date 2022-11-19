@@ -12,5 +12,5 @@ export default class Config {
     setAuthToken = async (token: string) => await save("token", token)
     deleteAuthToken = async () => await deleteValueFor("token")
 
-    getBackendAddress = () => "http://10.0.2.2:5000"
+    getBackendAddress = () => "https://deed-131-159-216-148.eu.ngrok.io"
 }
