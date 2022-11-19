@@ -40,6 +40,7 @@ def add_issue(username):
         category = req["category"],
         owning_guild = 0,
     )
+    new_issue.category = predict(new_issue.image_id)
 
     db.session.add(new_issue)
     db.session.commit()
