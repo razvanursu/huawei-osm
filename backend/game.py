@@ -1,12 +1,29 @@
+import random
+from typing import List
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import and_
+
 from geopy.distance import geodesic
+
 from . import db
 
 from .auth import tokenRequired
 from .models import User, Issues, Guilds
 
 game = Blueprint('game', __name__)
+
+XP_STAIRS = [
+    1200,
+    2400,
+    3600,
+    4800,
+    5600,
+    6400,
+    7200,
+    10000
+]
+
 
 @game.route('/add-issue', methods=["POST"])
 @tokenRequired
@@ -76,6 +93,10 @@ def get_issues(username):
             issue_dict["solved_by"] = solved_by.as_dict()
         else:
             del issue_dict["solved_by"]
+        
+        issue_dict["xp_value"] = get_xp_value(issue_dict["id"])
+        issue_dict["points_value"] = get_points_value(issue_dict["id"])
+        issue_dict["nearest_neighbor"], issue_dict["circle_radius"] = get_nearest_neighbour_id(issue_dict, issues_dict_list)
 
     response = jsonify(issues_dict_list)
 
@@ -90,14 +111,13 @@ def get_issues(username):
 def solve_issue(username):
     req = request.get_json()
     
-    
     issue_id = req["id"]
 
     issue: Issues = Issues.query.get(issue_id)
     user: User = User.query.filter(User.username == username).first()
 
-    current_position = (req["current_latitude"], req["current_longitude"])
-    issue_position = (issue.latitude, issue.longitude)
+    # current_position = (req["current_latitude"], req["current_longitude"])
+    # issue_position = (issue.latitude, issue.longitude)
 
     # TODO Check if the photo is okay
     photo_okay = True
@@ -105,9 +125,10 @@ def solve_issue(username):
         if user.guild:
             issue.owning_guild = user.guild
             issue.solved_by = user.username
-        user.current_xp += 2000
+        user.current_xp += get_xp_value(issue_id)
+        user.current_level, user.level_xp = get_level_from_xp(user.current_xp, XP_STAIRS)
 
-    print(geodesic(current_position, issue_position).meters)
+    # print(geodesic(current_position, issue_position).meters)
 
     db.session.commit()
 
@@ -167,3 +188,49 @@ def choose_guild(username):
         jsonify({"message": f"User has chosen a guild"}),
         200,
     )
+
+
+def get_xp_value(id):
+    random.seed(id)
+    return random.choice(
+        [1000, 3000, 5000]
+    )
+
+def get_points_value(id):
+    random.seed(id)
+    return random.choice(
+        [120, 330, 560]
+    )
+
+
+def get_level_from_xp(current_xp, xp_stairs):
+
+    for i, xp_stair in enumerate(xp_stairs):
+        current_xp -= xp_stair
+        if current_xp <= 0:
+            current_level = i
+            break
+    print(current_level)
+    level_xp = current_xp + xp_stairs[current_level]
+
+    return (current_level, level_xp)
+
+
+def get_nearest_neighbour_id(reference_issue: Issues, issues_list: List[Issues]) -> int:
+
+    reference_issue_position = (reference_issue["latitude"], reference_issue["longitude"])
+
+    best_distance = 1e10
+    nearest_neighbour_id = 0
+    
+    for current_issue in issues_list:
+        current_issue_position = (current_issue["latitude"], current_issue["longitude"])
+        if current_issue_position != reference_issue_position:
+
+            dist = geodesic(reference_issue_position, current_issue_position).meters
+
+            if dist < best_distance:
+                best_distance = dist
+                nearest_neighbour_id = current_issue["id"]
+    
+    return (nearest_neighbour_id, round(best_distance / 2))
