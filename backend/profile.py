@@ -15,15 +15,7 @@ def get_profile(username):
 
     user: User = User.query.filter(User.username == username).first()
 
-    user_profile = {
-        "username": user.username,
-        "email": user.email,
-        "current_level": user.current_level,
-        "join_date": user.join_date.strftime("%Y-%m-%d %H:%M:%S"),
-        "guild": user.guild
-    }
-
-    return jsonify(user_profile)
+    return jsonify(user.as_dict())
 
 @profile.route('/follow', methods=["POST"])
 @tokenRequired
@@ -46,7 +38,6 @@ def follow(username):
 @profile.route('/get-follow-requests')
 @tokenRequired
 def get_follow_requests(username):
-    req = request.get_json()
 
     follow_request_list: List[FollowList] = FollowList.query.filter(
         and_(
@@ -66,7 +57,6 @@ def get_follow_requests(username):
 @profile.route('/get-following')
 @tokenRequired
 def get_following(username):
-    req = request.get_json()
 
     follow_request_list: List[FollowList] = FollowList.query.filter(
         and_(
@@ -85,7 +75,6 @@ def get_following(username):
 @profile.route('/get-followers')
 @tokenRequired
 def get_followers(username):
-    req = request.get_json()
 
     follow_request_list: List[FollowList] = FollowList.query.filter(
         and_(

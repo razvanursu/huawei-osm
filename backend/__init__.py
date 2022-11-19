@@ -16,7 +16,7 @@ def create_app():
 
     migrate = Migrate(app, db, render_as_batch=True)
     
-    CORS(app)
+    # CORS(app)
 
     db.init_app(app)
 
