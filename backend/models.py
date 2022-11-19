@@ -1,3 +1,5 @@
+import datetime as dt
+
 from . import db
 from sqlalchemy import ForeignKey
 
@@ -39,6 +41,7 @@ class Issues(db.Model):
     category = db.Column(db.String(100))
     owning_guild = db.Column(db.Integer, ForeignKey("guilds.id"), default=0)
     solved_by = db.Column(db.String(100), default="undefined")
+    solved_datetime = db.Column(db.DateTime(), default=dt.datetime.fromtimestamp(0))
 
 
     def as_dict(self):

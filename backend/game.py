@@ -1,3 +1,4 @@
+import datetime as dt
 import random
 from typing import List
 
@@ -10,6 +11,7 @@ from . import db
 
 from .auth import tokenRequired
 from .models import User, Issues, Guilds
+from .ml import predict
 
 game = Blueprint('game', __name__)
 
@@ -75,6 +77,10 @@ def add_issue_bulk(username):
 @tokenRequired
 def get_issues(username):
 
+    req = request.get_json()
+
+    user_location = (req["latitude"], req["longitude"])
+
     issues_list = Issues.query.all()
 
     issues_dict_list = [issue.as_dict() for issue in issues_list]
@@ -89,14 +95,24 @@ def get_issues(username):
         
         if issue_dict["solved_by"] != "undefined":
             solved_by = User.query.filter(User.username == issue_dict["solved_by"]).first()
-            a = solved_by.as_dict()
+            # a = solved_by.as_dict()
             issue_dict["solved_by"] = solved_by.as_dict()
         else:
             del issue_dict["solved_by"]
+
+        
+        if issue_dict["solved_datetime"] == dt.datetime.fromtimestamp(0):
+            del issue_dict["solved_datetime"]
+
         
         issue_dict["xp_value"] = get_xp_value(issue_dict["id"])
         issue_dict["points_value"] = get_points_value(issue_dict["id"])
         issue_dict["nearest_neighbor"], issue_dict["circle_radius"] = get_nearest_neighbour_id(issue_dict, issues_dict_list)
+
+
+        issue_location = (issue_dict["latitude"], issue_dict["longitude"])
+
+        issue_dict["user_distance"] = round(geodesic(user_location, issue_location).meters)
 
     response = jsonify(issues_dict_list)
 
@@ -119,14 +135,17 @@ def solve_issue(username):
     # current_position = (req["current_latitude"], req["current_longitude"])
     # issue_position = (issue.latitude, issue.longitude)
 
+    predicted_class = predict(issue.image_id)
+
     # TODO Check if the photo is okay
     photo_okay = True
     if True or photo_okay:
         if user.guild:
             issue.owning_guild = user.guild
             issue.solved_by = user.username
-        user.current_xp += get_xp_value(issue_id)
-        user.current_level, user.level_xp = get_level_from_xp(user.current_xp, XP_STAIRS)
+            issue.solved_datetime = dt.datetime.now()
+            user.current_xp += get_xp_value(issue_id)
+            user.current_level, user.level_xp = get_level_from_xp(user.current_xp, XP_STAIRS)
 
     # print(geodesic(current_position, issue_position).meters)
 
@@ -196,6 +215,7 @@ def get_xp_value(id):
         [1000, 3000, 5000]
     )
 
+
 def get_points_value(id):
     random.seed(id)
     return random.choice(
@@ -210,7 +230,7 @@ def get_level_from_xp(current_xp, xp_stairs):
         if current_xp <= 0:
             current_level = i
             break
-    print(current_level)
+
     level_xp = current_xp + xp_stairs[current_level]
 
     return (current_level, level_xp)

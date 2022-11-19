@@ -20,6 +20,7 @@ XP_STAIRS = [
     10000
 ]
 
+
 @profile.route('/profile')
 @tokenRequired
 def get_profile(username):
