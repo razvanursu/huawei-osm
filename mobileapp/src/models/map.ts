@@ -1,4 +1,4 @@
-import { Expose, Type, Transform, plainToClass, Exclude } from 'class-transformer';
+import { Expose, Type, Transform, plainToClass, Exclude, plainToInstance } from 'class-transformer';
 import { Base } from './base';
 import { Guild } from './guild';
 import { User } from './user';
@@ -16,9 +16,10 @@ export class Issue extends Base {
   longitude: number
 
   @Expose({ name: "owning_guild" })
-  @Type(() => Guild)
+  @Transform(({ value }) => value && plainToInstance(Guild, value))
   owningGuild: Guild
 
   @Expose({ name: "solved_by" })
+  @Transform(({ value }) => value && plainToInstance(User, value))
   solvedBy: User
 }

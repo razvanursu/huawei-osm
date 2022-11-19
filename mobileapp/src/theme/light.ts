@@ -1,7 +1,7 @@
 import { Colors, createTheme } from '@rneui/themed';
 
-const lightColors: Partial<Colors> = {
-  //primary: '',
+const colors: Partial<Colors> = {
+  primary: '#CF0A2C',
   //secondary: '',
   background: '#FFFFFF',
   white: '#FFFFFF',
@@ -11,11 +11,11 @@ const lightColors: Partial<Colors> = {
 }
 
 const theme = createTheme({
-  lightColors,
   components: {
     Button: {
       buttonStyle: {
-        borderRadius: 50
+        borderRadius: 10,
+        backgroundColor: colors.primary
       }
     },
     Input: {
@@ -43,7 +43,8 @@ const theme = createTheme({
         fontSize: 40
       },
       h2Style: {
-        fontSize: 35
+        fontSize: 35,
+        color: colors.primary
       },
       h3Style: {
         fontSize: 30

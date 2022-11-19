@@ -13,6 +13,11 @@ import { useIssues } from "../../services/mapService";
 import { Issue } from "../../models/map";
 import IssueOverlay from "./IssueOverlay";
 
+const IssueFlag = require('../../../assets/icons/issue.png')
+const PirateFlag = require('../../../assets/icons/pirate.png')
+const KnightFlag = require('../../../assets/icons/knight.png')
+
+
 export type EventListScreenProps = NativeStackScreenProps<MapStackParamList, 'MapSearch'>;
 
 const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
@@ -46,26 +51,34 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                    maximumZ={100}
                    style={{ zIndex: -1 }}
                />
-               <Circle
-                    center={{ latitude: 41.902177, longitude: 12.498836}}
-                    radius={100}
-                    fillColor='rgba(1, 128, 128, 0.2)'
-                    strokeColor={"red"}
-                    
-                />
-                {issues && issues.map((issue: Issue) => (
-                    <Marker
-                        key={issue.id}
-                        coordinate={{ latitude: issue.latitude, longitude: issue.longitude}}
-                        title={"aaa"}
-                        description={"test"}
-                        onPress={() => setOpenIssue(issue)}
-                    >
-                        <View style={{ borderRadius: 25 }}>
-                            <Avatar source={require('../../../assets/icons/issue.png')} size={50} rounded/>
-                        </View>
-                    </Marker>
-                ))}
+                {issues && issues.map((issue: Issue) => {
+                    const icon = issue.owningGuild? (issue.owningGuild.id === 1? PirateFlag : KnightFlag) : IssueFlag
+                    return (
+                        <React.Fragment key={issue.id}>
+                            <Marker
+                                coordinate={{ latitude: issue.latitude, longitude: issue.longitude}}
+                                title={"aaa"}
+                                description={"test"}
+                                onPress={() => setOpenIssue(issue)}
+                                anchor={{ x: 0.5, y: 0.5 }}
+                            >
+                                <View style={{ borderRadius: 25, borderWidth: 1 }}>
+                                    <Avatar source={icon} size={50} containerStyle={{ backgroundColor: "white" }} rounded/>
+                                </View>
+                            </Marker>
+                        
+                            {issue.owningGuild && (
+                                <Circle
+                                    center={{ latitude: issue.latitude, longitude: issue.longitude}}
+                                    radius={200}
+                                    fillColor='rgba(1, 128, 128, 0.2)'
+                                    strokeColor={"red"}
+                                    
+                                />
+                            )}
+                        </React.Fragment>
+                    )}
+                )}
             </MapView>
 
             {/* Topbar - Search results */}
@@ -77,7 +90,11 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                     <View>
                         {openMenu && (
                             <>
-                                <Avatar source={require('../../../assets/icons/pirate.png')} size={50} rounded/>
+                                <Icon
+                                    name="add-circle"
+                                    size={50}
+                                    onPress={() => navigation.navigate("Leaderboard")}
+                                />
                                 <Icon name="add-circle" size={50} onPress={() => navigation.navigate("MyProfile")} />
                             </>
                         )}

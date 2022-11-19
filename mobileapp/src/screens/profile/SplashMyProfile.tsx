@@ -3,17 +3,15 @@ import { Text } from "@rneui/base";
 import { Icon } from "@rneui/themed";
 import React from "react";
 import { LoadingAuthenticatedView } from "../../components/views";
-import { useAuth } from "../../context/AuthContext";
-import { useMyProfileQuery, useProfileQuery } from "../../generated/types";
+import { User } from "../../models/user";
+import { useMyProfile } from "../../services/userService";
 import { MyProfileStackParamList } from "../../stacks/MyProfileStack";
 import ProfileScreen from "./ProfileScreen";
 
 type SplashMyProfileProps = NativeStackScreenProps<MyProfileStackParamList, 'MyProfile'>;
 
 const SplashProfile: React.FC<SplashMyProfileProps> = (props) => {
-    const { userID } = useAuth()
-
-    const { data, loading: isProfileLoading } = useMyProfileQuery()
+    const { data: myProfile, loading: isProfileLoading } = useMyProfile()
 
     React.useEffect(() => {
         props.navigation.setOptions({
@@ -28,11 +26,11 @@ const SplashProfile: React.FC<SplashMyProfileProps> = (props) => {
 
     if(isLoading) return <LoadingAuthenticatedView />
     //TODO consider error cases
-    if(data && data.myProfile)
+    if(myProfile)
         //TODO add title
         return (
             <ProfileScreen
-                profile={data.myProfile}
+                user={myProfile as User}
                 {...props}
             />
         )

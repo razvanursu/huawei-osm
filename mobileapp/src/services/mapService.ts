@@ -17,9 +17,7 @@ export const retrieveIssues = () => {
     const baseAddress = Config.getConfig().getBackendAddress()
 
     return api.get(`${baseAddress}/get-issues`)
-        .then((response: AxiosResponse<Issue[]>) => {
-            return plainToInstance(Issue, response.data)
-        })
+        .then((response: AxiosResponse<Issue[]>) => plainToInstance(Issue, response.data))
 }
 
 export const useIssues = () => 

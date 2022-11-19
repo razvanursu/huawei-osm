@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import { Avatar, Button, Text } from "@rneui/themed";
+import { Avatar, Button, LinearProgress, Text } from "@rneui/themed";
 import { useAuth } from '../../context/AuthContext';
 import { FollowerScreenTabs } from './FollowersListScreen';
 import { FullProfileFragment, MyProfileDocument, ProfileDocument, useFollowUserMutation, useUnfollowUserMutation } from '../../generated/types';
 import { CommonScreenParamList } from '../../stacks/common/common';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import EditProfileOverlay from '../../components/Overlays/EditProfileOverlay';
+import { User } from '../../models/user';
 
 const QuantityInfo = ({ number, label, onPress }: { number: number, label: string, onPress?: () => void}) => {
 
@@ -24,107 +25,67 @@ const QuantityInfo = ({ number, label, onPress }: { number: number, label: strin
 }
 
 interface ProfileScreenProps {
-  profile: FullProfileFragment
+  user: User
   navigation: any
 }
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ profile, navigation }) => {
-  const { userID } = useAuth()
+const BADGE_SIZE = 80
 
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, navigation }) => {
   const [editProfile, setEditProfile] = React.useState(false)
 
-  React.useEffect(() => navigation.setOptions({title: profile.username}), [navigation, profile.username]);
+  React.useEffect(() => navigation.setOptions({ headerShown: true, title: user.username }), [navigation, user.username]);
 
-  const [followUserMutation] = useFollowUserMutation({
-    refetchQueries: [
-      {query: ProfileDocument, variables: { userId: profile.id }},
-    ],
-    onCompleted: () => {
-        
-    },
-    onError: (error) => console.log(error),
-  })
-
-  const [unfollowUserMutation] = useUnfollowUserMutation({
-    refetchQueries: [
-      {query: ProfileDocument, variables: { userId: profile.id }},
-    ],
-    onCompleted: () => {
-        
-    },
-    onError: (error) => console.log(error),
-  })
-
-  console.log(profile.profilePicture)
-  const followUser = useCallback(() => followUserMutation({ variables: { userId: profile.id }}), [profile.id])
-  const unfollowUser = useCallback(() => unfollowUserMutation({ variables: { userId: profile.id }}), [profile.id])
-  
   return (
-    <View style={{ display: "flex", alignItems: 'center', width: "100%", paddingTop: 50 }}>
+    <View style={{ display: "flex", alignItems: 'center', width: "100%", height: "100%", paddingTop: 20, backgroundColor: "white" }}>
       
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
         <Avatar
           size={150}
           rounded
-          source={{ uri: `${profile.profilePicture}?${new Date()}` || "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg" }}
+          source={{ uri: "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg" }}
         />
       </View>
 
-      <Text h2>
-        {profile.name}
+      <Text h3 style={{ marginBottom: 20, color: "grey0" }}>
+        {user.username}
       </Text>
 
-      <Text h4 style={{ marginBottom: 30, color: "grey0" }}>
-        @{profile.username}
+      <Text h4 style={{ marginBottom: 5, color: "red" }}>
+        First Mate
       </Text>
 
-      <View>
-        {userID === profile.id?(
-          <Button
-            title="Edit Profile"
-            onPress={() => setEditProfile(true)}
-          />
-        ):(
-          <Button
-            title={profile.followingRelation?"Unfollow":"Follow"}
-            onPress={profile.followingRelation?unfollowUser:followUser}
-          />
-        )}
-      </View>
+      <Text h4 style={{ marginBottom: 30 }}>
+        Level {user.currentLevel}
+      </Text>
       
-      <View style={{ flexDirection: "row", width: "100%", paddingHorizontal: 10, marginBottom: 10 }}>
-        {/*<QuantityInfo
-          label={"Events"}
-          number={profile.eventsNumber}
-          onPress={() => navigation.navigate("FollowerList", { userId: profile.id, name: profile.name, index: FollowerScreenTabs.Events })}
-        />*/}
-        <QuantityInfo
-          label={"Followers"}
-          number={profile.followersNumber || 0}
-          onPress={() => navigation.navigate("FollowerList", { userId: profile.id, name: profile.name, index: FollowerScreenTabs.Follower })}
+      <View style={{ flexDirection: "row", width: "100%", paddingHorizontal: 10, marginBottom: 20 }}>
+        <View style={{ borderRadius: 10, borderWidth: 1, borderColor: "grey0", height: 30, width: "100%", justifyContent: "center", alignItems: "center" }}>
+        <View style={{ left: 0, top: 0, position: "absolute", borderBottomLeftRadius: 8, borderTopLeftRadius: 8, zIndex: -1, backgroundColor: "green", width: "50%", height: "100%" }} />
+          <Text h4>
+            1000 / 1000 XP
+          </Text>
+        </View>
+      </View>
+
+      <View style={{ flexDirection: "row", width: "100%", paddingHorizontal: 10, marginBottom: 10, justifyContent: "space-evenly" }}>
+        <Avatar
+            size={BADGE_SIZE}
+            source={require('../../../assets/badges/badge1.png')}
         />
-        <QuantityInfo
-          label={"Following"}
-          number={profile.followingUsersNumber || 0}
-          onPress={() => navigation.navigate("FollowerList", { userId: profile.id, name: profile.name, index: FollowerScreenTabs.Following })}
+        <Avatar
+            size={BADGE_SIZE}
+            source={require('../../../assets/badges/badge2.png')}
+        />
+        <Avatar
+            size={BADGE_SIZE}
+            source={require('../../../assets/badges/badge3.png')}
         />
       </View>
 
       <View style={{ width: "100%", paddingHorizontal: 50, marginBottom: 10 }}>
         {/*<Button title="Edit Profile" color={"grey1"} onPress={() => navigation.navigate('EditProfile', { profile })} />*/}
       </View>
-
-      <View style={{ width: "100%", paddingHorizontal: 20 }}>
-        <Text h4>
-          {profile.bio}
-        </Text> 
-      </View>
-
-      <EditProfileOverlay
-        profile={profile}
-        visible={editProfile}
-        onClose={() => setEditProfile(false)}
-      />
       
     </View>
   );
