@@ -80,7 +80,7 @@ def add_issue_bulk(username):
 @tokenRequired
 def get_issues(username):
 
-    req = request.get_json()
+    req = request.args
 
     user_location = (req["latitude"], req["longitude"])
 
