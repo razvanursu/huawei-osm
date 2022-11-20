@@ -34,5 +34,12 @@ export class Issue extends Base {
 
   @Expose({ name: "xp_value" })
   xpValue: number
+  
+  @Expose({ name: "user_distance" })
+  userDistance: number
+
+  @Expose({ name: "solved_datetime" })
+  @Transform(({ value }) => new Date(value))
+  solvedDatetime: Date
 
 }

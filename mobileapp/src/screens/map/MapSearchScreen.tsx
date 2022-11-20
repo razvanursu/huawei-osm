@@ -35,6 +35,8 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
 
     const [region, setRegion] = React.useState(CURRENT_POSITION)
     
+    const percentage = myProfile && Math.floor((myProfile.levelXp * 100) / myProfile.levelMaxXp).toString() + "%"
+
     return (
         <View style={styles.container}>
             <MapView
@@ -102,7 +104,7 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                             </Text>
                             <View style={{ flexDirection: "row", width: 120 }}>
                                 <View style={{ borderRadius: 10, borderWidth: 1, borderColor: "grey0", height: 15, width: "100%", justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ left: 0, top: 0, position: "absolute", borderBottomLeftRadius: 8, borderTopLeftRadius: 8, zIndex: -1, backgroundColor: "green", width: "30%", height: "100%" }} />
+                                    <View style={{ left: 0, top: 0, position: "absolute", borderBottomLeftRadius: 8, borderTopLeftRadius: 8, zIndex: -1, backgroundColor: "green", width: percentage, height: "100%" }} />
                                 </View>
                             </View>
                         </View>

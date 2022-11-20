@@ -44,4 +44,12 @@ const FullDate: React.FC<FullDateProps> = ({ startDate, endDate }) => {
     )
 }
 
+
+export const dateDiff = (startDate: Date, endDate: Date) => {
+    const momentStartDate = moment(new Date(startDate))
+    const momentEndDate = moment(new Date(endDate))
+
+    return momentEndDate.diff(momentStartDate, "m")
+}
+
 export default FullDate
