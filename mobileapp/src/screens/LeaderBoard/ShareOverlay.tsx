@@ -1,39 +1,6 @@
-import { Avatar, Icon, Image, Overlay, Text } from "@rneui/themed"
+import { Avatar, Overlay, Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-
-const WatchImage = require('../../../assets/prices/watch.png')
-const FreebudsImage = require('../../../assets/prices/freebuds.png')
-const GoogleImage = require('../../../assets/prices/google.png')
-
-const PRICES = [
-    {
-        name: "Huawei Watch GT 3 46 mm",
-        image: WatchImage,
-        points: 1000000
-    },
-    {
-        name: "Huawei Freebuds 4 Earphones",
-        image: FreebudsImage,
-        points: 800000
-    },
-    {
-        name: "3 GB Google Storage",
-        image: GoogleImage,
-        points: 300000
-    },
-    {
-        name: "MVG bikes - 100 minutes for free",
-        image: FreebudsImage,
-        points: 100000
-    },
-    {
-        name: "Fake Smile",
-        image: FreebudsImage,
-        points: 100000
-    }
-]
-
 interface ShareOverlayProps {
     visible: boolean
     onClose: () => void
@@ -50,7 +17,7 @@ const ShareOverlay: React.FC<ShareOverlayProps> = ({ visible, onClose }) => {
             overlayStyle={{
                 position: "absolute",
                 left: 0,
-                top: 600,
+                top: 500,
                 bottom: 0,
                 width: "100%",
                 borderTopLeftRadius: 20,

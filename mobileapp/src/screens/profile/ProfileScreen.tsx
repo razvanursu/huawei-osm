@@ -4,20 +4,8 @@ import { Avatar, Icon, Text } from "@rneui/themed";
 import { User } from '../../models/user';
 import { useAuth } from '../../context/AuthContext';
 
-const QuantityInfo = ({ number, label, onPress }: { number: number, label: string, onPress?: () => void}) => {
-
-  return (
-    <Pressable style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }} onPress={onPress}>
-      <Text h4 style={{ alignItems: 'center', justifyContent: 'center' }}>
-        {number}
-      </Text>
-
-      <Text h4 style={{ alignItems: 'center', justifyContent: 'center', color: "grey0" }}>
-        {label}
-      </Text>
-    </Pressable>
-  )
-}
+const PirateFlag = require('../../../assets/icons/coin.png')
+const KnightFlag = require('../../../assets/icons/knight.png')
 
 interface ProfileScreenProps {
   user: User
@@ -47,7 +35,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, navigation }) => {
         <Avatar
           size={150}
           rounded
-          source={{ uri: "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg" }}
+          source={user.id === 2?require("../../../assets/icons/colombo.png"):require("../../../assets/icons/amerigo.png")}
         />
       </View>
 
@@ -55,8 +43,16 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ user, navigation }) => {
         {user.username}
       </Text>
 
+      <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+        <Avatar
+            size={40}
+            rounded
+            source={user.guild === 1?PirateFlag:KnightFlag}
+        />
+      </View>
+
       <Text h4 style={{ marginBottom: 5, color: "red" }}>
-        First Mate
+        {user.guild === 1?'Captain':'Lancelot'}
       </Text>
 
       <Text h4 style={{ marginBottom: 30 }}>

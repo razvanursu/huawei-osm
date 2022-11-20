@@ -8,6 +8,8 @@ import { MapStackParamList } from "../../stacks/MapStack"
 const WatchImage = require('../../../assets/prices/watch.png')
 const FreebudsImage = require('../../../assets/prices/freebuds.png')
 const GoogleImage = require('../../../assets/prices/google.png')
+const MVGImage = require('../../../assets/prices/mvg.png')
+const TUMImage = require('../../../assets/prices/tum.png')
 
 const PRICES = [
     {
@@ -31,14 +33,14 @@ const PRICES = [
     {
         id: 4,
         name: "MVG bikes - 100 minutes for free",
-        image: FreebudsImage,
+        image: MVGImage,
         points: 100000
     },
     {
         id: 5,
-        name: "Fake Smile",
-        image: FreebudsImage,
-        points: 100000
+        name: "TUM merchandise",
+        image: TUMImage,
+        points: 50000
     }
 ]
 
@@ -88,7 +90,7 @@ const PricesScreen: React.FC<PricesScreenProps> = ({ navigation }) => {
                                 <Text numberOfLines={1}>
                                     {price.points} points
                                 </Text>
-                                <Button title="obtain" buttonStyle={{ height: 30 }} titleStyle={{ fontSize: 10 }} disabled={!(myProfile && myProfile.currentPoints < price)} />
+                                <Button title="obtain" buttonStyle={{ height: 30 }} titleStyle={{ fontSize: 10 }} disabled={!myProfile || myProfile.currentPoints < price.points} />
                             </View>
                         </View>
                     </View>

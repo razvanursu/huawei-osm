@@ -148,6 +148,7 @@ def solve_issue(username):
             issue.solved_by = user.username
             issue.solved_datetime = dt.datetime.now()
             user.current_xp += get_xp_value(issue_id)
+            user.current_points += get_points_value(issue_id)
             user.current_level, user.level_xp = get_level_from_xp(user.current_xp, XP_STAIRS)
 
     # print(geodesic(current_position, issue_position).meters)

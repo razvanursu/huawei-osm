@@ -52,7 +52,22 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
                    maximumZ={100}
                    style={{ zIndex: -1 }}
                />
-                {issues && issues.slice(5).map((issue: Issue) => {
+                {myProfile && (
+                    <Marker
+                        coordinate={{ latitude: CURRENT_POSITION.latitude, longitude: CURRENT_POSITION.longitude}}
+                        anchor={{ x: 0.5, y: 0.5 }}
+                    >   
+                        <View style={{ borderRadius: 25, borderWidth: 1 }}>
+                            <Avatar
+                                source={myProfile.id === 2?require("../../../assets/icons/colombo.png"):require("../../../assets/icons/amerigo.png")}
+                                size={50}
+                                containerStyle={{ backgroundColor: "white" }}
+                                rounded
+                            />
+                        </View>
+                    </Marker>
+                )}
+                {issues && issues.slice(0,10).map((issue: Issue) => {
                     const icon = issue.owningGuild? (issue.owningGuild.id === 1? PirateFlag : KnightFlag) : IssueFlag
                     const color = issue.owningGuild? (issue.owningGuild.id === 1? 'rgba(212, 53, 53, 0.2)' : 'rgba(56, 53, 212, 0.2)') : ""
 
@@ -113,12 +128,12 @@ const MapSearchScreen: React.FC<EventListScreenProps> = ({ navigation }) => {
 
                 <View style={{ display: "flex", flex: 1 }} />
 
-                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: 10 }}>
+                <View style={{ backgroundColor: "white", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", padding: 10 }}>
                     <Avatar
                         size={50}
                         rounded
                         source={require('../../../assets/icons/my-location.png')}
-                        onPress={() => mapViewRef.current?.animateToRegion(CURRENT_POSITION)}
+                        //onPress={() => mapViewRef.current?.animateToRegion(CURRENT_POSITION)}
                         containerStyle={{ backgroundColor: "white", borderWidth: 1 }}
                     />
                     <View style={{ display: "flex", flexDirection: "row" }}>

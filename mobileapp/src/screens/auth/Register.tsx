@@ -52,12 +52,6 @@ const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
           containerStyle={{ marginBottom: 8 }}
         />
         <Input
-          placeholder="Full name"
-          value={name}
-          onChangeText={setName}
-          containerStyle={{ marginBottom: 8 }}
-        />
-        <Input
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
@@ -68,7 +62,7 @@ const RegisterScreen = ({ navigation }: RegisterScreenProps) => {
         />
         <Button
           title="Register"
-          onPress={() => onRegister({email, username, name, birthday: new Date(), password})}
+          //onPress={() => onRegister({email, username, name, birthday: new Date(), password})}
           containerStyle={{ marginBottom: 20 }}
         />
 

@@ -7,6 +7,9 @@ export class User extends Base {
 
   @Expose({ name: "username" })
   username: string
+
+  @Expose({ name: "guild" })
+  guild: number
   
   @Expose({ name: "current_level" })
   currentLevel: number

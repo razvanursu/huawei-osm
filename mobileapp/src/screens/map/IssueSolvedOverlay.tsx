@@ -1,8 +1,9 @@
-import { Button, Overlay, Text } from "@rneui/themed"
+import { Button, lightColors, Overlay, Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
 import { Issue } from "../../models/map"
 import { useMyProfile } from "../../services/userService"
+import { colors } from "../../theme/light"
 
 interface IssueSolvedOverlayProps {
     visible: boolean
@@ -27,7 +28,7 @@ const IssueSolvedOverlay: React.FC<IssueSolvedOverlayProps> = ({
             }}
         >
             <View style={{ justifyContent: "center", marginBottom: 10 }}>
-                <Text h2 style={{ textAlign: "center" }}>You did it!</Text>
+                <Text h3 style={{ textAlign: "center", color: colors.primary }}>The issue has been solved!</Text>
             </View>
 
 

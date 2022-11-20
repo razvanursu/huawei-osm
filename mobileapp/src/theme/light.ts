@@ -1,6 +1,6 @@
 import { Colors, createTheme } from '@rneui/themed';
 
-const colors: Partial<Colors> = {
+export const colors: Partial<Colors> = {
   primary: '#CF0A2C',
   //secondary: '',
   background: '#FFFFFF',
@@ -21,7 +21,7 @@ const theme = createTheme({
     Input: {
       inputContainerStyle: {
         borderWidth: 1,
-        borderRadius: 30,
+        borderRadius: 10,
         marginHorizontal: -10,
         backgroundColor: "white",
         height: 45

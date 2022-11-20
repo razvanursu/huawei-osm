@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider = ({children}: any) => {
   //The loading part will be explained in the persist step session
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | undefined>();
 
   React.useEffect(() => {

@@ -87,6 +87,7 @@ const IssueOverlay: React.FC<IssueOverlayProps> = ({
                     />
                 </View>
             </View>
+
             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
                 <Avatar
                     size={100}
